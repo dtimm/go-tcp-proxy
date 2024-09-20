@@ -7,8 +7,9 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"time"
 
-	proxy "github.com/jpillora/go-tcp-proxy"
+	proxy "github.com/dtimm/go-tcp-proxy"
 )
 
 var (
@@ -27,6 +28,7 @@ var (
 	unwrapTLS   = flag.Bool("unwrap-tls", false, "remote connection with TLS exposed unencrypted locally")
 	match       = flag.String("match", "", "match regex (in the form 'regex')")
 	replace     = flag.String("replace", "", "replace regex (in the form 'regex~replacer')")
+	delay       = flag.Duration("d", time.Duration(0), "delay time as golang duration")
 )
 
 func main() {
@@ -77,6 +79,8 @@ func main() {
 		} else {
 			p = proxy.New(conn, laddr, raddr)
 		}
+
+		p.Delay = *delay
 
 		p.Matcher = matcher
 		p.Replacer = replacer

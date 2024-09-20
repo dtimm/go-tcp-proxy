@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"io"
 	"net"
+	"time"
 )
 
 // Proxy - Manages a Proxy connection, piping data between local and remote.
@@ -19,6 +20,8 @@ type Proxy struct {
 
 	Matcher  func([]byte)
 	Replacer func([]byte) []byte
+
+	Delay time.Duration
 
 	// Settings
 	Nagles    bool
@@ -129,6 +132,8 @@ func (p *Proxy) pipe(src, dst io.ReadWriter) {
 			return
 		}
 		b := buff[:n]
+
+		time.Sleep(p.Delay)
 
 		//execute match
 		if p.Matcher != nil {
