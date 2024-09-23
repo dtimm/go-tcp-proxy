@@ -1,6 +1,6 @@
 # tcp-proxy
 
-A small TCP proxy written in Go
+A small TCP proxy written in Go, forked from https://github.com/jpillora/go-tcp-proxy
 
 This project was intended for debugging text-based protocols. The next version will address binary protocols.
 
@@ -17,15 +17,24 @@ $ go get -v github.com/dtimm/go-tcp-proxy/cmd/tcp-proxy
 ```
 $ tcp-proxy --help
 Usage of tcp-proxy:
-  -c: output ansi colors
-  -h: output hex
-  -l="localhost:9999": local address
-  -n: disable nagles algorithm
-  -r="localhost:80": remote address
-  -match="": match regex (in the form 'regex')
-  -replace="": replace regex (in the form 'regex~replacer')
-  -v: display server actions
-  -vv: display server actions and all tcp data
+  -c    output ansi colors
+  -d duration
+        delay time as golang duration
+  -h    output hex
+  -l string
+        local address (default ":9999")
+  -match string
+        match regex (in the form 'regex')
+  -n    disable nagles algorithm
+  -r string
+        remote address (default "localhost:80")
+  -replace string
+        replace regex (in the form 'regex~replacer')
+  -unwrap-tls
+        remote connection with TLS exposed unencrypted locally
+  -v    display server actions
+  -vv
+        display server actions and all tcp data
 ```
 
 *Note: Regex match and replace*
@@ -51,6 +60,15 @@ $ curl -H 'Host: echo.jpillora.com' localhost:9999/foo
   ...
 }
 ```
+
+### Delay Example
+
+```
+$ tcp-proxy -r echo.jpillora.com:80 -d 200ms
+Proxying from localhost:9999 to echo.jpillora.com:80
+```
+
+Test with `curl` and it will add 200ms to each end of the request.
 
 ### Match Example
 
